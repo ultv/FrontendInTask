@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Тестовое задание Frontend. Выполнил: Александр Седов.</title>
+    <style>
+      input {
+        margin-right: 20px;
+      }    
+      .range-alert {
+        padding: 10px;
+        width: 288px;        
+        border: solid 1px #ebebeb;
+      }
+    </style>    
+  </head>    
+  <body>              
+    <div class="DataRange1">
+      <h3>Компонент DataRange</h3>
+    </div>      
+    <div class="DataRange2">
+     <h3>Компонент DataRange</h3>
+    </div>                 
+  
+    <script>
+
+      function DataRange(place) {
+        this.place=document.querySelector(place);
+        this._init()
+      }
+                
+      DataRange.prototype._init = function() {                        
+        this.elem=document.createElement("div");
+        this.from = "<input type=\"date\" id=\"from\" name=\"from\"/>";
+        this.before = "<input type=\"date\" id=\"before\" name=\"before\"/>";
+        this.confirm = "<button type=\"button\" onclick=\"validate(this)\">Подтвердить</button>";            
+        this.elem.innerHTML = this.from + this.before + this.confirm;        
+        this.place.appendChild(this.elem);                    
+      }
+        
+      function validate(obj) {            
+        var before = obj.previousSibling;
+        var from = before.previousSibling;
+            
+        if((from.value == 0) || (before.value == 0)) {
+                
+          alert("Не указана одна из дат")
+                
+        } else if (from.value < before.value) {
+                
+          var fromDate = new Date(from.value);
+          var beforeDate = new Date(before.value);
+          var range = beforeDate - fromDate;
+          var days = millisecondsToDays(range);                                                              
+          var elem=document.createElement("div");
+          elem.className = "range-alert";
+          elem.textContent="Диапазон дат c: " + fromDate.toLocaleDateString() + " по " + beforeDate.toLocaleDateString() + " включает: " + days + " дней.";
+          obj.parentNode.appendChild(elem);
+                
+        } else {
+                
+          alert("Первая дата должна быть меньше чем вторая");                           
+        }
+      }
+    
+      function millisecondsToDays(milliseconds) {
+        var include = 1; //подсчет ведем с учетом дней из диапазона
+        var seconds = milliseconds / 1000;
+        var minutes = seconds / 60;
+        var hours = minutes / 60;
+        var days = hours / 24;
+      
+        return days + include;
+      }
+                                               
+      var component1 = new DataRange("div.DataRange1");
+      var component2 = new DataRange("div.DataRange2");
+
+    </script>    
+  </body>       
+</html>
